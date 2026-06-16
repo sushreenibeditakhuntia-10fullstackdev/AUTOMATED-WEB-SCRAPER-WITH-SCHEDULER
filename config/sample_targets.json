@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Books to Scrape — All Books",
+    "url": "https://books.toscrape.com/catalogue/page-1.html",
+    "scraper_type": "requests",
+    "schedule_cron": "0 8 * * *",
+    "config_json": {
+      "list_selector": "article.product_pod",
+      "selectors": {
+        "title": "h3 > a",
+        "url": "h3 > a",
+        "price": "p.price_color",
+        "rating": "p.star-rating"
+      },
+      "pagination": {
+        "next_selector": "li.next > a",
+        "max_pages": 3
+      },
+      "delay": 1.5
+    }
+  },
+  {
+    "name": "Quotes to Scrape",
+    "url": "https://quotes.toscrape.com/",
+    "scraper_type": "requests",
+    "schedule_cron": "0 */6 * * *",
+    "config_json": {
+      "list_selector": "div.quote",
+      "selectors": {
+        "title": "span.text",
+        "category": "small.author",
+        "description": "div.tags"
+      },
+      "pagination": {
+        "next_selector": "li.next > a",
+        "max_pages": 2
+      },
+      "delay": 1
+    }
+  },
+  {
+    "name": "Hacker News Front Page (Selenium)",
+    "url": "https://news.ycombinator.com/",
+    "scraper_type": "selenium",
+    "schedule_cron": "*/30 * * * *",
+    "config_json": {
+      "list_selector": "tr.athing",
+      "selectors": {
+        "title": "span.titleline > a",
+        "url": "span.titleline > a",
+        "rating": "span.score"
+      },
+      "wait_selector": "tr.athing",
+      "scroll_to_bottom": false,
+      "delay": 2
+    }
+  }
+]

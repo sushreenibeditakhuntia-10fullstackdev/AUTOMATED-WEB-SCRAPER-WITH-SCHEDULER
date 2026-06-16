@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — WebScraper{% endblock %}
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h2><i class="fa-solid fa-gauge-high me-2 text-primary"></i>Dashboard</h2>
+    <p class="text-muted">Monitor your scraping jobs and data.</p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+          <i class="fa-solid fa-briefcase fa-2x text-primary"></i>
+        </div>
+        <div>
+          <div class="h3 mb-0">{{ total_jobs }}</div>
+          <div class="text-muted">Total Jobs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-success bg-opacity-10 p-3">
+          <i class="fa-solid fa-database fa-2x text-success"></i>
+        </div>
+        <div>
+          <div class="h3 mb-0">{{ total_records }}</div>
+          <div class="text-muted">Records Scraped</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+          <i class="fa-solid fa-circle-check fa-2x text-warning"></i>
+        </div>
+        <div>
+          <div class="h3 mb-0">{{ jobs | selectattr('is_active') | list | length }}</div>
+          <div class="text-muted">Active Jobs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Jobs table -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Recent Jobs</h5>
+    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addJobModal">
+      <i class="fa-solid fa-plus me-1"></i>Add Job
+    </button>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th><th>URL</th><th>Type</th><th>Schedule</th><th>Active</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td><a href="/jobs/{{ job.id }}">{{ job.name }}</a></td>
+          <td><small class="text-muted text-truncate d-inline-block" style="max-width:200px">{{ job.url }}</small></td>
+          <td><span class="badge bg-secondary">{{ job.scraper_type }}</span></td>
+          <td><small>{{ job.schedule_cron or '—' }}</small></td>
+          <td>
+            {% if job.is_active %}
+              <span class="badge bg-success">Active</span>
+            {% else %}
+              <span class="badge bg-danger">Paused</span>
+            {% endif %}
+          </td>
+          <td>
+            <button class="btn btn-xs btn-outline-primary" onclick="triggerJob({{ job.id }})">
+              <i class="fa-solid fa-play"></i>
+            </button>
+            <a href="/api/export?job_id={{ job.id }}" class="btn btn-xs btn-outline-success">
+              <i class="fa-solid fa-download"></i>
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No jobs yet. Add your first job!</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Job Modal -->
+<div class="modal fade" id="addJobModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-plus me-2"></i>Add Scraper Job</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Job Name *</label>
+          <input type="text" class="form-control" id="jobName" placeholder="My Scraper Job"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Target URL *</label>
+          <input type="url" class="form-control" id="jobUrl" placeholder="https://example.com/products"/>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Scraper Type</label>
+            <select class="form-select" id="jobType">
+              <option value="requests">Requests (fast, static)</option>
+              <option value="selenium">Selenium (JS-capable)</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Schedule (cron)</label>
+            <input type="text" class="form-control" id="jobCron" placeholder="0 */6 * * *"/>
+            <small class="text-muted">Leave blank for manual trigger only</small>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Selector Config (JSON)</label>
+          <textarea class="form-control font-monospace" id="jobConfig" rows="6"
+            placeholder='{"list_selector": ".product", "selectors": {"title": "h2", "price": ".price", "url": "a"}}'></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="createJob()">
+          <i class="fa-solid fa-save me-1"></i>Save Job
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

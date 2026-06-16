@@ -1,0 +1,118 @@
+/* ── Global ─────────────────────────────────────────────────────────────── */
+body {
+  background-color: #f4f6f9;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+.navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+.card {
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+}
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border-bottom: 1px solid #eee;
+  padding: 1rem 1.25rem;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-xs {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+.btn {
+  border-radius: 8px;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.badge {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}
+.table th {
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #6c757d;
+}
+
+/* ── Stat icon circles ────────────────────────────────────────────────────── */
+.rounded-circle.bg-primary.bg-opacity-10,
+.rounded-circle.bg-success.bg-opacity-10,
+.rounded-circle.bg-warning.bg-opacity-10 {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Toast notifications ─────────────────────────────────────────────────── */
+#toastContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.toast-msg {
+  min-width: 280px;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: slideIn 0.25s ease;
+}
+.toast-msg.success { background: #198754; }
+.toast-msg.error   { background: #dc3545; }
+.toast-msg.info    { background: #0d6efd; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Code / JSON textarea ─────────────────────────────────────────────────── */
+.font-monospace {
+  font-size: 0.82rem;
+}
+
+/* ── Spinner overlay ──────────────────────────────────────────────────────── */
+#loadingOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+}
+#loadingOverlay.active {
+  display: flex;
+}
+
+/* ── Responsive tweaks ────────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .container-fluid { padding: 1rem; }
+  h2 { font-size: 1.4rem; }
+}

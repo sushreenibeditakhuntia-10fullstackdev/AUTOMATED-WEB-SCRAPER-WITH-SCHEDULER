@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Records — WebScraper{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="fa-solid fa-database me-2 text-success"></i>Scraped Records</h2>
+  <a href="/api/export" class="btn btn-outline-success btn-sm">
+    <i class="fa-solid fa-download me-1"></i>Export All CSV
+  </a>
+</div>
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-0" style="overflow-x:auto">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-light">
+        <tr><th>#</th><th>Job</th><th>Title</th><th>URL</th><th>Price</th><th>Category</th><th>Rating</th><th>Scraped At</th></tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td><a href="/jobs/{{ r.job_id }}">{{ r.job_id }}</a></td>
+          <td><small>{{ r.title or '—' }}</small></td>
+          <td><small class="text-truncate d-inline-block" style="max-width:160px">{{ r.url or '—' }}</small></td>
+          <td><small>{{ r.price or '—' }}</small></td>
+          <td><small>{{ r.category or '—' }}</small></td>
+          <td><small>{{ r.rating or '—' }}</small></td>
+          <td><small>{{ r.scraped_at }}</small></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-5">No records yet. Run a job first!</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
